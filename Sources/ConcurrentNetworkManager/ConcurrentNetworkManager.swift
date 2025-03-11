@@ -3,7 +3,7 @@
 
 import Foundation
 
-open class UserInfo: @unchecked Sendable {
+open class UserInfo {
     var name: String
     init(name: String) {
         self.name = name
@@ -16,4 +16,3 @@ actor SwiftDataRaceManager {
         self.userInfo = userInfo
     }
 }
-
