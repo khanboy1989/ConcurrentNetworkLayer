@@ -8,13 +8,27 @@
 import Foundation
 
 /// A protocol to handle upload progress with URLSession task
-protocol UploadProgressDelegate: URLSessionDelegate, Sendable { }
+public protocol UploadProgressDelegate: URLSessionDelegate, Sendable { }
 
 /// A delegate class for handling upload progress.
-final class UploadProgressDelegateImpl: NSObject, UploadProgressDelegate {
-    
+public final class UploadProgressDelegateImpl: NSObject, UploadProgressDelegate {
     /// A closure to handle the progress updates. This closure will be called on the main thread
     private let progressHandler: (@Sendable (Double) -> Void)?
-    
-    
+    /// Initializes the delegate with progress handler
+    ///
+    /// - Parameter progressHandler: A closure that will be called to handle progress updateds
+    init(progressHandler: (@Sendable (Double) -> Void)?) {
+        self.progressHandler = progressHandler
+    }
+    /// This method is called by the URLSession whenever data is sent during an upload task.
+    nonisolated func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        didSendBodyData bytesSent: Int64,
+        totalBytesSent: Int64,
+        totalBytesExpectedToSend: Int64
+    ) {
+        let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
+        progressHandler?(progress)
+    }
 }

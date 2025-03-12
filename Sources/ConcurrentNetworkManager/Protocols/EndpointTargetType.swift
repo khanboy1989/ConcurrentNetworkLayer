@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// A proEndpointTargetTypetocol defining the requirements for an API endpoint.
+/// A EndpointTargetType defining the requirements for an API endpoint.
 ///
 /// This protocol specifies the necessary components to construct a URL request for an API endpoint.
 /// It includes details such as the HTTP method, path, base URL, headers, URL parameters, body, and API version.
@@ -40,4 +40,31 @@ public protocol EndpointTargetType {
     var urlRequest: URLRequest? { get }
     /// API version used by the endpoint
     var apiVersion: String { get }
+}
+
+public extension EndpointTargetType {
+    /// A computed property that constructs and returns a `URLRequest` for the endpoint.
+    ///
+    /// This property assembles a `URLRequest` by combining the base URL, API version, and path.
+    /// It adds any query parameters and sets the HTTP method, headers, and body as specified by the endpoint.
+    ///
+    /// - Returns: A `URLRequest` if the URL components can be successfully created, otherwise `nil`.
+    ///
+    /// ### Example
+    /// ``` swift
+    /// let request = endpoint.urlRequest
+    /// // Use the request with URLSession or any networking library
+    /// ```
+    var urlRequest: URLRequest? {
+        var components = URLComponents(string: baseURL + apiVersion + path)
+        components?.queryItems = urlParameters.map { key, value in
+            URLQueryItem(name: key, value: String(describing: value))
+        }
+        guard let url = components?.url else { return nil }
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.allHTTPHeaderFields = headers
+        request.httpBody = body
+        return request
+    }
 }

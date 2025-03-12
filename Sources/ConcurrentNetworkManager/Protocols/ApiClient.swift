@@ -4,11 +4,9 @@
 //
 //  Created by Serhan Khan on 11/03/2025.
 //
-
 import Foundation
-
 /// A protocol defining the methods for making API requests.
-public protocol IApiClient {
+public protocol IApiClient: Sendable {
     /// Sends a request to the specified endpoint and decodes the response into a given type.
     ///
     /// - Parameters:
@@ -21,7 +19,6 @@ public protocol IApiClient {
         _ endpoint: any IApiClient,
         decoder: JSONDecoder
     ) async throws -> T
-    
     /// Sends a request that does not return the response body
     ///
     /// - Parameters:
@@ -32,7 +29,6 @@ public protocol IApiClient {
     ///  - This method can be used for various HTTP Method that we are not interested in the
     ///   response/return value but only if it succeed or fails, such as `POST`, `DELETE`, and `PATCH` and more.
     func requestVoid(_ endpoint: any IApiClient) async throws
-    
     /// Sends a request to the specified endpoint and returns the raw data with upload progress
     ///
     /// - Parameters:
@@ -41,5 +37,25 @@ public protocol IApiClient {
     /// - Returns: The raw `Data` received from the request, or `nil` if no data is received
     /// - Throws : An error if the request fails.
     @discardableResult
-    func requestWithProgress(_ endpoint: any IApiClient, progressDelegate: (any Upload))
+    func requestWithProgress(
+        _ endpoint: any IApiClient,
+        progressDelegate: (
+            any UploadProgressDelegate
+        )
+    ) async throws -> Data?
+}
+
+public extension IApiClient {
+    // With default decoder parameters: JSONDecoder()
+    @discardableResult
+    func request<T: Codable & Sendable>(_ endpoint: any EndpointTargetType) async throws -> T {
+        try await request(endpoint, decoder: JSONDecoder())
+    }
+    // With default delegate parameter: nil
+    @discardableResult
+    func requestData(
+        _ endpoint: any EndpointTargetType
+    ) async throws -> Data? {
+        try await requestWithProgress(endpoint, progressDelegate: nil)
+    }
 }
