@@ -1,0 +1,43 @@
+name: Swift CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build and Test with Swift 6
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Swift 6
+        run: |
+          curl -s https://swift.org/builds/swift-6.0-release/ubuntu2204/swift-6.0-RELEASE/swift-6.0-RELEASE-ubuntu22.04.tar.gz -o swift.tar.gz
+          tar -xvzf swift.tar.gz
+          sudo mv swift-6.0-RELEASE-ubuntu22.04 /usr/local/swift-6.0
+          echo "/usr/local/swift-6.0/usr/bin" >> $GITHUB_PATH
+
+      - name: Verify Swift Version
+        run: swift --version
+
+      - name: Build Project
+        run: swift build -v
+
+      - name: Run Tests
+        run: swift test --enable-test-discovery --verbose
+
+      - name: Swift Coverage Report
+        uses: drekka/swift-coverage-action@v1.4
+        with:
+          coverage: 80 # Minimum expected coverage percentage
+          show-all-files: true # List all source files in the coverage list
+          sort-by-name: true # Sort the coverage by name
+          build-dir: .build # Location of the build directory
+          coverage-files: "**/codecov/*.json" # Filter to locate coverage JSON files
+          includes: "**/Sources/**" # Only consider source files
+          excludes: "**/Tests/**" # Exclude test files from coverage report
