@@ -4,7 +4,6 @@
 //
 //  Created by Serhan Khan on 11/03/2025.
 //
-
 import Foundation
 
 /// A EndpointTargetType defining the requirements for an API endpoint.

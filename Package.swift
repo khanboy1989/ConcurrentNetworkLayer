@@ -4,13 +4,14 @@
 import PackageDescription
 
 let settings: [SwiftSetting] = [
-  .enableExperimentalFeature("StrictConcurrency")
+    .enableExperimentalFeature("StrictConcurrency")
 ]
 
 let package = Package(
     name: "ConcurrentNetworkManager",
     platforms: [
-        .iOS(.v17)
+        .iOS(.v17),
+        .macOS(.v12)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -19,7 +20,7 @@ let package = Package(
             targets: ["ConcurrentNetworkManager"]),
     ], dependencies: [
         .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.2")
-
+        
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -32,7 +33,10 @@ let package = Package(
         ),
         .testTarget(
             name: "ConcurrentNetworkManagerTests",
-            dependencies: ["ConcurrentNetworkManager"]
+            dependencies: ["ConcurrentNetworkManager"],
+            swiftSettings: [
+                .define("PLATFORM_IOS", .when(platforms: [.iOS])) // Force iOS-only behavior in tests
+            ]
         ),
     ]
 )
