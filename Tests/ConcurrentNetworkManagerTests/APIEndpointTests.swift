@@ -72,7 +72,7 @@ final class APIEndpointTests: XCTestCase {
         let requestBody = "{\"name\":\"John\"}".data(using: .utf8)
         let endpoint = MockAPIEndpoint(
             method: .post,
-            path: "users",
+            path: "/users",
             baseURL: "https://api.example.com",
             headers: ["Authorization": "Bearer token", "Content-Type": "application/json"],
             urlParameters: [:],

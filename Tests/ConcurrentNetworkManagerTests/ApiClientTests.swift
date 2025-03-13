@@ -68,7 +68,6 @@ private struct MockApiClient: IApiClient {
     }
 }
 
-
 // Given
 private struct User: Codable, Sendable {
     let id: Int
