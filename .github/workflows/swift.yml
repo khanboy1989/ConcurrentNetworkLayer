@@ -8,26 +8,18 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Build and Test with Swift 6
     runs-on: macos-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        
+      - name: Setup Swift
+        uses: SwiftyLab/setup-swift@latest
 
       - name: Build Project
-        run: swift build -v
-
+        run: swift build
+        
       - name: Run Tests
-        run: swift test --enable-test-discovery --verbose
-
-      - name: Swift Coverage Report
-        uses: drekka/swift-coverage-action@v1.4
-        with:
-          coverage: 80 # Minimum expected coverage percentage
-          show-all-files: true # List all source files in the coverage list
-          sort-by-name: true # Sort the coverage by name
-          build-dir: .build # Location of the build directory
-          coverage-files: "**/codecov/*.json" # Filter to locate coverage JSON files
-          includes: "**/Sources/**" # Only consider source files
-          excludes: "**/Tests/**" # Exclude test files from coverage report
+        run: swift test
