@@ -15,12 +15,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Swift 6
-        run: |
-          curl -s https://swift.org/builds/swift-6.0-release/ubuntu2204/swift-6.0-RELEASE/swift-6.0-RELEASE-ubuntu22.04.tar.gz -o swift.tar.gz
-          tar -xvzf swift.tar.gz
-          sudo mv swift-6.0-RELEASE-ubuntu22.04 /usr/local/swift-6.0
-          echo "/usr/local/swift-6.0/usr/bin" >> $GITHUB_PATH
+      - name: Setup Swift
+        uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: "6.0"
 
       - name: Verify Swift Version
         run: swift --version
