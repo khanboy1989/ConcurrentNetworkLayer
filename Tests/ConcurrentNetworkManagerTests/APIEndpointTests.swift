@@ -48,8 +48,8 @@ final class APIEndpointTests: XCTestCase {
         // Given
         let endpoint = MockAPIEndpoint(
             method: .get,
-            path: "users",
-            baseURL: "https://api.example.com",
+            path: "/users",
+            baseURL: "https://api.example.com/api/",
             headers: ["Authorization": "Bearer token"],
             urlParameters: ["include": "details"],
             body: nil,
@@ -73,7 +73,7 @@ final class APIEndpointTests: XCTestCase {
         let endpoint = MockAPIEndpoint(
             method: .post,
             path: "/users",
-            baseURL: "https://api.example.com",
+            baseURL: "https://api.example.com/api/",
             headers: ["Authorization": "Bearer token", "Content-Type": "application/json"],
             urlParameters: [:],
             body: requestBody,
@@ -96,8 +96,8 @@ final class APIEndpointTests: XCTestCase {
         // Given
         let endpoint = MockAPIEndpoint(
             method: .delete,
-            path: "users/1",
-            baseURL: "https://api.example.com",
+            path: "/users/1",
+            baseURL: "https://api.example.com/api/",
             headers: [:],
             urlParameters: [:],
             body: nil,
@@ -147,8 +147,8 @@ final class APIEndpointTests: XCTestCase {
         // Given
         let endpoint = MockAPIEndpoint(
             method: .get,
-            path: "",
-            baseURL: "https://api.example.com",
+            path: "/",
+            baseURL: "https://api.example.com/api/",
             headers: [:],
             urlParameters: [:],
             body: nil,
