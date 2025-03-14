@@ -11,7 +11,7 @@ public final class ApiClientImpl: IApiClient {
     private let token: String?
     private let session: URLSession
     // MARK: Initialization
-    init(token: String? = nil, session: URLSession = .shared) {
+    public init(token: String? = nil, session: URLSession = .shared) {
         self.token = token
         self.session = session
     }

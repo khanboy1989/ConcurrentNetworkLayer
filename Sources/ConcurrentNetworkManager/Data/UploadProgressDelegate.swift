@@ -17,11 +17,11 @@ public final class UploadProgressDelegateImpl: NSObject, UploadProgressDelegate 
     /// Initializes the delegate with progress handler
     ///
     /// - Parameter progressHandler: A closure that will be called to handle progress updateds
-    init(progressHandler: (@Sendable (Double) -> Void)?) {
+    public init(progressHandler: (@Sendable (Double) -> Void)?) {
         self.progressHandler = progressHandler
     }
     /// This method is called by the URLSession whenever data is sent during an upload task.
-    nonisolated func urlSession(
+    public nonisolated func urlSession(
         _ session: URLSession,
         task: URLSessionTask,
         didSendBodyData bytesSent: Int64,
