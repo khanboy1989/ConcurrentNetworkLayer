@@ -8,6 +8,7 @@ ConcurrentNetworkManager is a lightweight and efficient Swift package designed f
 - **Upload Progress Tracking**: Allows tracking of upload progress using a delegate.
 - **Flexible API Client**: A protocol-driven API client implementation.
 - **Error Handling**: Defines custom error types for improved debugging.
+- **Logging Support**: The package uses its own logging system when an `appName` is provided as a parameter. If `appName` is `nil`, logging is disabled.
 - **Extensibility**: Designed to be easily extendable for various network needs.
 
 ## Installation
@@ -18,7 +19,7 @@ To integrate ConcurrentNetworkManager into your project, add it as a dependency 
 ```swift
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/your-repository/ConcurrentNetworkManager.git", from: "1.0.4")
+        .package(url: "https://github.com/khanboy1989/ConcurrentNetworkManager.git", from: "1.0.5"),
     ]
 )
 ```
@@ -33,7 +34,7 @@ Or, if using Xcode:
 ```swift
 import ConcurrentNetworkManager
 
-let apiClient = ApiClientImpl(token: "your-api-token")
+let apiClient = ApiClientImpl(token: "your-api-token", appName: "YourAppName")
 ```
 
 ### 2. Defining an API Endpoint
@@ -88,6 +89,46 @@ Task {
 }
 ```
 
+### 5. Example Repository Implementation
+#### **PostEndpointTarget**
+```swift
+enum PostEndpointTarget {
+    case posts
+}
+
+extension PostEndpointTarget: EndpointTargetType {
+    var method: HTTPMethod { .get }
+    var path: String { "/posts" }
+    var baseURL: String {
+        let proxyPath: String = Environment.current.jsonApiConfiguration.proxyPath
+        return Environment.current.jsonApiConfiguration.baseUrl + proxyPath
+    }
+    var headers: [String : String] { [:] }
+    var urlParameters: [String : any CustomStringConvertible] { [:] }
+    var body: Data? { nil }
+    var apiVersion: String { "/v1" }
+}
+```
+#### **PostsRepository**
+```swift
+protocol PostsRepositoryProtocol: Sendable {
+    func getPosts() async throws -> [PostDTO]
+}
+
+final class PostsRepositoryImpl: PostsRepositoryProtocol {
+    private let apiClient: any IApiClient
+    private typealias apiEndpoint = PostEndpointTarget
+    
+    init(apiClient: any IApiClient = ApiClientImpl(appName: "YourAppName")) {
+        self.apiClient = apiClient
+    }
+    
+    func getPosts() async throws -> [PostDTO] {
+        return try await apiClient.request(apiEndpoint.posts)
+    }
+}
+```
+
 ## Project Structure
 ```
 ConcurrentNetworkManager
@@ -121,3 +162,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Serhan Khan**  
 [LinkedIn](https://www.linkedin.com/in/serhan-khan-97b577103/)  
 [GitHub](https://github.com/khanboy1989)
+
