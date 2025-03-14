@@ -29,12 +29,18 @@ public final class ApiClientImpl: IApiClient {
         guard let request = endpoint.urlRequest else {
             throw APIClientError.invalidURL
         }
+
         // Perform the network request and decode the data
         let data = try await performRequest(request)
+
         do {
             return try decoder.decode(T.self, from: data)
+        } catch let decodingError as DecodingError {
+            let errorMessage = decodingError.errorDescription
+            self.logger.log(level: .error, message: "Decoding Error: \(errorMessage)")
+            throw APIClientError.decodingFailed(decodingError)
         } catch {
-            // Handle decoding errors
+            self.logger.log(level: .error, message: "Unknown Decoding Error: \(error.localizedDescription)")
             throw APIClientError.decodingFailed(error)
         }
     }

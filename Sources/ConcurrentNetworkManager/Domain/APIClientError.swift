@@ -39,21 +39,26 @@ extension APIClientError: CustomStringConvertible {
     public var description: String {
         switch self {
         case .invalidURL:
-            return "Invalid URL: The URL could not be constructed."
+            return "❌ Invalid URL: The URL could not be constructed."
         case .invalidResponse(let data):
-            return "Invalid Response: The server response was not valid. Data: \(String(decoding: data, as: UTF8.self))"
+            let responseString = String(data: data, encoding: .utf8) ?? "<Invalid UTF-8 Data>"
+            return "⚠️ Invalid Response: The server response was not valid. Data: \(responseString)"
         case .requestFailed(let error):
-            return "Request Failed: \(error.localizedDescription)"
+            return "🚨 Request Failed: \(error.localizedDescription)"
         case .decodingFailed(let error):
-            return "Decoding Failed: \(error.localizedDescription)"
+            if let decodingError = error as? DecodingError {
+                return "🔍 Decoding Failed: \(decodingError.errorDescription)"
+            } else {
+                return "🔍 Decoding Failed: \(error.localizedDescription)"
+            }
         case .notExpectedHttpResponseCode(let code):
-            return "Unexpected HTTP Response Code: \(code)"
+            return "⚠️ Unexpected HTTP Response Code: \(code)"
         case .urlRequestIsEmpty:
-            return "Empty URL Request: The URL request could not be created."
+            return "🛑 Empty URL Request: The URL request could not be created."
         case .statusCode(let code):
-            return "HTTP Error: Status Code \(code)"
+            return "🚫 HTTP Error: Status Code \(code)"
         case .networkError(let error):
-            return "Network Error: \(error.localizedDescription)"
+            return "🌐 Network Error: \(error.localizedDescription)"
         }
     }
 }

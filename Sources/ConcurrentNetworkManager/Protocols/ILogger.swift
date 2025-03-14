@@ -10,8 +10,7 @@ import Logging
 
 protocol ILogger: Sendable {
     func log(level: LogLevel,
-             message: @autoclosure () -> String
-    )
+             message: @autoclosure () -> String)
 }
 
 struct Logger: ILogger {
