@@ -19,15 +19,15 @@ let package = Package(
             name: "ConcurrentNetworkManager",
             targets: ["ConcurrentNetworkManager"]),
     ], dependencies: [
-        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.2")
-        
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.2"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.2.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "ConcurrentNetworkManager",
-            dependencies: [],
+            dependencies: [ .product(name: "Logging", package: "swift-log")],
             swiftSettings: settings,
             plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
         ),

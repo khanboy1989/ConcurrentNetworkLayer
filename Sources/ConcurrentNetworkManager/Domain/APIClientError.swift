@@ -35,3 +35,25 @@ enum APIClientError: Error {
     case statusCode(Int)
     case networkError(any Error)
 }
+extension APIClientError: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .invalidURL:
+            return "Invalid URL: The URL could not be constructed."
+        case .invalidResponse(let data):
+            return "Invalid Response: The server response was not valid. Data: \(String(decoding: data, as: UTF8.self))"
+        case .requestFailed(let error):
+            return "Request Failed: \(error.localizedDescription)"
+        case .decodingFailed(let error):
+            return "Decoding Failed: \(error.localizedDescription)"
+        case .notExpectedHttpResponseCode(let code):
+            return "Unexpected HTTP Response Code: \(code)"
+        case .urlRequestIsEmpty:
+            return "Empty URL Request: The URL request could not be created."
+        case .statusCode(let code):
+            return "HTTP Error: Status Code \(code)"
+        case .networkError(let error):
+            return "Network Error: \(error.localizedDescription)"
+        }
+    }
+}

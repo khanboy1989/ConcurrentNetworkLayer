@@ -10,10 +10,16 @@ public final class ApiClientImpl: IApiClient {
     // MARK: - Properties
     private let token: String?
     private let session: URLSession
+    private let logger: ILogger
     // MARK: Initialization
-    public init(token: String? = nil, session: URLSession = .shared) {
+    public init(
+        token: String? = nil,
+        session: URLSession = .shared,
+        appName: String? = nil
+    ) {
         self.token = token
         self.session = session
+        self.logger = appName == nil ? NoLogger(label: "") : Logger(label: appName!)
     }
     // MARK: - Methods
     public func request<T: Decodable & Sendable>(
@@ -67,9 +73,11 @@ private extension ApiClientImpl {
         )? = nil
     ) async throws -> Data {
         // Inject Token
+        self.logger.log(request: request)
         if let token = token {
             var mutableRequest = request
             mutableRequest.addValue(.tokenWithSpace + String(token), forHTTPHeaderField: .authorization)
+            self.logger.log(level: .info, message: "Token: \(String(token))")
         }
         // Configure session
         let session: URLSession
@@ -82,17 +90,22 @@ private extension ApiClientImpl {
             // Perform Network Request
             let (data, response) = try await session.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse else {
+                self.logger.log(level: .error, message: APIClientError.invalidResponse(data).description)
                 throw APIClientError.invalidResponse(data)
             }
+            self.logger.log(data: data, response: httpResponse)
             // Log the HTTP response
             guard (200...299).contains(httpResponse.statusCode) else {
+                self.logger.log(level: .error, message: APIClientError.statusCode(httpResponse.statusCode).description)
                 throw APIClientError.statusCode(httpResponse.statusCode)
             }
             return data
         } catch {
             if let urlError = error as? URLError {
+                self.logger.log(level: .error, message: APIClientError.networkError(urlError).description)
                 throw APIClientError.networkError(urlError)
             } else {
+                self.logger.log(level: .error, message: APIClientError.requestFailed(error).description)
                 throw APIClientError.requestFailed(error)
             }
         }
