@@ -19,7 +19,7 @@ To integrate ConcurrentNetworkManager into your project, add it as a dependency 
 ```swift
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/khanboy1989/ConcurrentNetworkManager.git", from: "1.0.5"),
+        .package(url: "https://github.com/khanboy1989/ConcurrentNetworkLayer", from: "1.0.5"),
     ]
 )
 ```
