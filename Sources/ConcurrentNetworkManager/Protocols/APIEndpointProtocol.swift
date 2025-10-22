@@ -31,5 +31,19 @@ public protocol APIEndpointProtocol {
     /// Base URL for the API.
     var baseURL: String { get }
     
+    /// Headers for the request
+    var headers: [String: String] { get }
+    
+    /// URL parameters for the request.
+    var urlParams: [String: any CustomStringConvertible] { get }
+    
+    /// Body data for the request
+    var httpBody: HTTPBody? { get }
+    
+    /// URLRequest representation of the endpoint.
+    var urlRequest: URLRequest? { get }
+    
+    /// API version used by the endpoint, example: `/api/v1/`
+    var apiVersion: String { get }
     
 }
