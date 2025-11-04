@@ -19,7 +19,7 @@ let package = Package(
             name: "ConcurrentNetworkManager",
             targets: ["ConcurrentNetworkManager"]),
     ], dependencies: [
-        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.2"),
+//        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.2"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.2.0")
     ],
     targets: [
@@ -29,7 +29,7 @@ let package = Package(
             name: "ConcurrentNetworkManager",
             dependencies: [ .product(name: "Logging", package: "swift-log")],
             swiftSettings: settings,
-            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
+//            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
         ),
         .testTarget(
             name: "ConcurrentNetworkManagerTests",
