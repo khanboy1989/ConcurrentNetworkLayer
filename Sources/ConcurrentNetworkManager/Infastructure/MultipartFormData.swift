@@ -62,7 +62,6 @@ public struct MultipartFormData {
 
 public extension MultipartFormData {
     
-    
     /// Creates multipart form data body
     var asHttpBodyData: Data {
         var body = Data()

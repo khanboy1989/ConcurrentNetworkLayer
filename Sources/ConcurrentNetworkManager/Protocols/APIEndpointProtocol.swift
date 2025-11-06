@@ -38,7 +38,7 @@ public protocol APIEndpointProtocol {
     var urlParams: [String: any CustomStringConvertible] { get }
     
     /// Body data for the request
-    var httpBody: HTTPBody? { get }
+    var body: HTTPBody? { get }
     
     /// URLRequest representation of the endpoint.
     var urlRequest: URLRequest? { get }
@@ -46,4 +46,39 @@ public protocol APIEndpointProtocol {
     /// API version used by the endpoint, example: `/api/v1/`
     var apiVersion: String { get }
     
+}
+
+public extension APIEndpointProtocol {
+    
+    /// A computed property that constructs and returns a `URLRequest` for the endpoint.
+    ///
+    /// This property assembles a `URLRequest` by combining the base URL, API version, and path. It adds any query parameters and sets the HTTP method, headers, and body as specified by the endpoint.
+    ///
+    /// - Returns: A `URLRequest` if the URL components can be successfully created, otherwise `nil`.
+    ///
+    /// ### Example
+    /// ```swift
+    /// let request = endpoint.urlRequest
+    /// // Use the request with URLSession or any networking library.
+    /// ```
+    var urlRequest: URLRequest? {
+        var components = URLComponents(string: baseURL + apiVersion + path)
+        
+        if !urlParams.isEmpty {
+            components?.queryItems = urlParams.map { key, value in
+                URLQueryItem(name: key, value: String(describing: value))
+            }
+        }
+        
+        // Returns nil when the url is nil
+        guard let url = components?.url else { return nil }
+        
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = method.rawValue
+        request.allHTTPHeaderFields = headers
+        request.httpBody = body?.asData
+        
+        return request
+    }
 }
