@@ -1,36 +1,28 @@
-//
-//  MultipartFormData.swift
-//  ConcurrentNetworkManager
-//
-//  Created by Serhan Khan on 03/11/2025.
-//
-
 import Foundation
 
-/// A model representing multipart from data configuration.
+/// A model representing multipart form data configuration.
 public struct MultipartFormData {
-    
     /// Boundary string used to separate parts.
     public let boundary: String
-    
+
     /// Data of the file to upload.
     public let fileData: Data
-    
+
     /// Name of the file.
     public let fileName: String
-    
-    /// MIME type of the file
+
+    /// MIME type of the file.
     public let mimeType: String
-    
-    /// Parameters to include in the multipart form data
+
+    /// Parameters to include in the multipart form data.
     public let parameters: [String: String]
-    
+
     public init(
         boundary: String,
         fileData: Data,
         fileName: String,
         mimeType: String,
-        parameters: [String: String]
+        parameters: [String : String]
     ) {
         self.boundary = boundary
         self.fileData = fileData
@@ -38,10 +30,11 @@ public struct MultipartFormData {
         self.mimeType = mimeType
         self.parameters = parameters
     }
+
     public var asData: Data {
         var body = Data()
         let lineBreak = "\r\n".data(using: .utf8)!
-        
+
         for (key, value) in parameters {
             body.append("--\(boundary)\r\n".data(using: .utf8)!)
             body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
@@ -55,21 +48,20 @@ public struct MultipartFormData {
         body.append(lineBreak)
 
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        
         return body
     }
 }
 
 public extension MultipartFormData {
-    
-    /// Creates multipart form data body
+
+    /// Creates multipart form data body.
     var asHttpBodyData: Data {
         var body = Data()
         
         // Add parameters
-        for(key, value) in parameters {
+        for (key, value) in parameters {
             body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
             body.append("\(value)\r\n".data(using: .utf8)!)
         }
         

@@ -1,16 +1,12 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
-let settings: [SwiftSetting] = [
-    .enableExperimentalFeature("StrictConcurrency")
-]
-
 let package = Package(
     name: "ConcurrentNetworkManager",
     platforms: [
-        .iOS(.v17),
+        .iOS(.v15),
         .macOS(.v12)
     ],
     products: [
@@ -19,7 +15,6 @@ let package = Package(
             name: "ConcurrentNetworkManager",
             targets: ["ConcurrentNetworkManager"]),
     ], dependencies: [
-//        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.58.2"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.2.0")
     ],
     targets: [
@@ -28,8 +23,6 @@ let package = Package(
         .target(
             name: "ConcurrentNetworkManager",
             dependencies: [ .product(name: "Logging", package: "swift-log")],
-            swiftSettings: settings,
-//            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
         ),
         .testTarget(
             name: "ConcurrentNetworkManagerTests",

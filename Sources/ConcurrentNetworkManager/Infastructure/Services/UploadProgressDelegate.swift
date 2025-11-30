@@ -1,25 +1,29 @@
 //
-//  UploadProgressDelegate.swift
+//  to.swift
 //  ConcurrentNetworkManager
 //
-//  Created by Serhan Khan on 11/03/2025.
+//  Created by Serhan Khan on 29/11/2025.
 //
+
 
 import Foundation
 
-/// A protocol to handle upload progress with URLSession task
-public protocol UploadProgressDelegate: URLSessionDelegate, Sendable { }
+/// A protocol to handle upload progress with URLSession tasks.
+public protocol UploadProgressDelegateProtocol: URLSessionTaskDelegate, Sendable { }
 
 /// A delegate class for handling upload progress.
-public final class UploadProgressDelegateImpl: NSObject, UploadProgressDelegate {
-    /// A closure to handle the progress updates. This closure will be called on the main thread
+public final class UploadProgressDelegate: NSObject, UploadProgressDelegateProtocol {
+
+    /// A closure to handle the progress updates. This closure will be called on the main thread.
     private let progressHandler: (@Sendable (Double) -> Void)?
-    /// Initializes the delegate with progress handler
+    
+    /// Initializes the delegate with a progress handler.
     ///
-    /// - Parameter progressHandler: A closure that will be called to handle progress updateds
+    /// - Parameter progressHandler: A closure that will be called to handle progress updates.
     public init(progressHandler: (@Sendable (Double) -> Void)?) {
         self.progressHandler = progressHandler
     }
+    
     /// This method is called by the URLSession whenever data is sent during an upload task.
     public nonisolated func urlSession(
         _ session: URLSession,
