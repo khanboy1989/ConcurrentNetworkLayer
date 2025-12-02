@@ -37,11 +37,11 @@ public final class DefaultNMLogger: NMLoggerProtocol {
         #if DEBUG
         switch type {
             case .info:
-                print("ℹ️ [DefaultEHLogger][Info]: \(message)")
+                print("ℹ️ [DefaultNMLogger][Info]: \(message)")
             case .error:
-                print("❌ [DefaultEHLogger][Error]: \(message)")
+                print("❌ [DefaultNMLogger][Error]: \(message)")
             case .debug:
-                print("🐞 [DefaultEHLogger][Debug]: \(message)")
+                print("🐞 [DefaultNMLogger][Debug]: \(message)")
         }
         #endif
     }
