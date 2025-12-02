@@ -8,14 +8,14 @@
 
 import Foundation
 
-/// A logger that conforms to `EHLoggerProtocol` for logging messages with different levels.
+/// A logger that conforms to `NMLoggerProtocol` for logging messages with different levels.
 ///
 /// This logger provides methods to log messages with types such as info, error, and debug. It only logs
 /// messages in the debug build configuration.
 ///
 /// Example usage:
 /// ```swift
-/// let logger = DefaultEHLogger()
+/// let logger = DefaultNMLogger()
 /// logger.log(message: "Request started", type: .info)
 /// logger.log(message: "Request failed", type: .error)
 /// ```
